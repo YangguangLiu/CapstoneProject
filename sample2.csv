@@ -1,0 +1,7 @@
+sample_id,analyte_name,expected_raw,submitter
+c_1,HDL,0.36,Alex
+c_2,HDL,0.18,Alex
+c_1,LDL,0.55,Alex
+c_2,LDL,0.83,Alex
+c_1,Triglycerides,0.64,Alex
+c_2,Triglycerides,0.77,Alex

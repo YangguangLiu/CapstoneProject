@@ -1,0 +1,16 @@
+sample_id,analyte_name,expected_raw,submitter
+x_1,HDL,0.24,David
+x_2,HDL,0.48,David
+x_3,HDL,0.29,David
+x_4,HDL,0.43,David
+x_5,HDL,0.7,David
+x_1,LDL,0.49,David
+x_2,LDL,0.3,David
+x_3,LDL,0.75,David
+x_4,LDL,0.45,David
+x_5,LDL,0.51,David
+x_1,Triglycerides,0.39,David
+x_2,Triglycerides,0.62,David
+x_3,Triglycerides,0.58,David
+x_4,Triglycerides,0.65,David
+x_5,Triglycerides,0.32,David

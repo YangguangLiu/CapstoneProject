@@ -1,0 +1,145 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
+# Final Report
+### by Analyst
+### `r Sys.Date()`
+
+**Part 1 Standard Data**
+
+```{r library, include=FALSE}
+library(ggplot2)
+library(kableExtra)
+library(tinytex)
+
+```
+
+```{r, include=FALSE}
+options(tinytex.verbose = TRUE)
+```
+
+```{r echo=FALSE, warning=FALSE}
+stddata_HDL <- dplyr::filter(standard_data(), grepl("HDL", std_id))
+  
+linearMod_HDL <- lm(result ~ expected_raw, data = stddata_HDL)
+```
+
+Summary of the linear regression model for analyte *HDL*
+```{r echo=FALSE}
+summary(linearMod_HDL)
+```
+
+
+```{r echo=FALSE}
+b_HDL   <- coef(linearMod_HDL)
+```
+
+
+```{r echo=FALSE}
+ggplot(data = stddata_HDL, 
+                 aes(stddata_HDL$expected_raw, stddata_HDL$result)) + 
+            geom_point() + 
+            labs(title = "Standard plot of Analyte HDL",
+                 x = "Expected raw data of Analyte HDL",
+                 y = "Final result of Analyte HDL")
+```
+
+```{r echo=FALSE}
+stddata_LDL <- dplyr::filter(standard_data(), grepl("LDL", std_id))
+  
+linearMod_LDL <- lm(result ~ expected_raw, data = stddata_LDL)
+```
+
+Summary of the linear regression model for analyte *LDL*
+```{r echo=FALSE}
+summary(linearMod_LDL)
+```
+
+```{r echo=FALSE}
+b_LDL   <- coef(linearMod_LDL)
+```
+
+
+```{r echo=FALSE}
+ggplot(data = stddata_LDL, 
+                 aes(stddata_LDL$expected_raw, stddata_LDL$result)) + 
+            geom_point() + 
+            labs(title = "Standard plot of Analyte LDL",
+                 x = "Expected raw data of Analyte LDL",
+                 y = "Final result of Analyte LDL")
+```
+
+```{r echo=FALSE}
+stddata_Triglycerides <- dplyr::filter(standard_data(), grepl("Triglycerides", std_id))
+  
+linearMod_Triglycerides <- lm(result ~ expected_raw, data = stddata_Triglycerides)
+```
+
+Summary of the linear regression model for analyte *Triglycerides*
+```{r echo=FALSE}
+summary(linearMod_Triglycerides)
+```
+
+```{r echo=FALSE}
+b_Triglycerides   <- coef(linearMod_Triglycerides)
+```
+
+
+```{r echo=FALSE}
+ggplot(data = stddata_Triglycerides, 
+                 aes(stddata_Triglycerides$expected_raw, stddata_Triglycerides$result)) + 
+            geom_point() + 
+            labs(title = "Standard plot of Analyte Triglycerides",
+                 x = "Expected raw data of Analyte Triglycerides",
+                 y = "Final result of Analyte Triglycerides")
+```
+
+**Part 2 Final Results**
+
+The predicted results are shown in the following figures:
+
+```{r echo=FALSE}
+analyst_result_HDL <- dplyr::filter(analyst_analysis_result(), grepl("HDL", analyte_name))
+
+ggplot(data = analyst_result_HDL, 
+                 aes(as.numeric(analyst_result_HDL$expected_raw),
+                     as.numeric(analyst_result_HDL$result))) + 
+            geom_point() + 
+            labs(title = "Predicted Results plot of Analyte HDL",
+                 x = "Expected raw data of Analyte HDL",
+                 y = "Final result of Analyte HDL")
+```
+
+```{r echo=FALSE}
+analyst_result_LDL <- dplyr::filter(analyst_analysis_result(), grepl("LDL", analyte_name))
+
+ggplot(data = analyst_result_LDL, 
+                 aes(as.numeric(analyst_result_LDL$expected_raw),
+                     as.numeric(analyst_result_LDL$result))) + 
+            geom_point() + 
+            labs(title = "Predicted Results plot of Analyte LDL",
+                 x = "Expected raw data of Analyte LDL",
+                 y = "Final result of Analyte LDL")
+```
+
+
+```{r echo=FALSE}
+analyst_result_Triglycerides <- dplyr::filter(analyst_analysis_result(), grepl("Triglycerides", analyte_name))
+
+ggplot(data = analyst_result_Triglycerides, 
+                 aes(as.numeric(analyst_result_Triglycerides$expected_raw),
+                     as.numeric(analyst_result_Triglycerides$result))) + 
+            geom_point() + 
+            labs(title = "Predicted Results plot of Analyte Triglycerides",
+                 x = "Expected raw data of Analyte Triglycerides",
+                 y = "Final result of Analyte Triglycerides")
+```
+
+The predicted results are shown in the following table:
+
+```{r echo=FALSE}
+library(knitr)
+kable(analyst_analysis_result(), caption = "Predicted results table")
+```
