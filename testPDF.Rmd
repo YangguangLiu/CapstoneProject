@@ -1,0 +1,40 @@
+---
+title: "test"
+author: "test"
+date: "2/7/2020"
+output: 
+  pdf_document:
+    fig_caption: yes        
+    includes:  
+      in_header: my_header.tex
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Here is a histogram of the poisson distribution:
+
+```{r cars, fig.cap="my caption"}
+hist(rpois(100,3))
+```
+
+The thing below is a table:
+
+```{r}
+knitr::kable(mtcars[1:5, 1:5], caption = "I need this to be the third thing that appears. But it comes out first???")
+```
+
+The thing below is a bigger table:
+
+```{r}
+knitr::kable(mtcars[1:6, 1:6], caption = "I need this to be the fourth thing that appears. But it comes out second???")
+```
+
+Here is a base graphics plot:
+
+```{r pressure, echo=FALSE, fig.cap="Another caption"}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
