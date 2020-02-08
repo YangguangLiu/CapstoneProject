@@ -1,68 +1,140 @@
 ---
+title: \vspace{1in} Report of Sample Analysis Results
+author: "Steven Allen"
+date: "`r Sys.Date()`"
+header-includes:
+  - \usepackage{graphicx}
+  - \usepackage{float}
+  - \usepackage{titling}
+  - \pretitle{\begin{center}\LARGE\includegraphics[width=2in,height=2in]{MUnivlogo.jpeg}\\[\bigskipamount]}
+  - \posttitle{\end{center}}
 output:
-  pdf_document: default
-  html_document: default
+  pdf_document: 
+    fig_caption: yes  
+    fig_height: 3  
+    fig_width: 3.5  
+    keep_tex: yes  
+    number_sections: yes  
+    toc: yes  
+    toc_depth: 3  
+  html_document: default  
 ---
-# Final Report
-### by Analyst
-### `r Sys.Date()`
 
-**Part 1 Standard Data**
-
-```{r library, include=FALSE}
+```{r setup, include=FALSE}
 library(ggplot2)
 library(kableExtra)
 library(tinytex)
-
-```
-
-```{r, include=FALSE}
+library(knitr)
 options(tinytex.verbose = TRUE)
+opts_chunk$set(echo = FALSE, fig.pos = 'H')
 ```
 
-```{r echo=FALSE, warning=FALSE}
+<!--- Optionally include a page break. This will force the start of the document to the second page --->
+\newpage
+\tableofcontents
+\listoffigures
+\listoftables
+\newpage
+
+# Introduction
+
+Developed an R/Shiny app: Sample submission system (with integrated RMarkdown report) for Capstone Project, tools include git, SQLite, RStudio; 
+
+Used the tool to submit samples for analysis, track analysis result, and submission date with the role of submitter, download submission data, create data linear regression model, load analysis result, data stored in a database with the role of the analyst.
+
+
+* **Submitter**
+
+    * Able to track different analytes analysis result  
+    * Able to download query result  
+    * Submitter only see own data  
+
+* **Staff**
+
+    * Able to submit samples analysis expected raw results to database  
+    * Able to track analysis result from database  
+    * Able to download analysis result  
+
+* **Analyst**
+
+    * Able to load standard data, produce expected raw data versus result plot  
+    * Able to track raw result  
+    * Perform linear regression of controls  
+    * Able to calculate sample result  
+    * Able to download sample result  
+    * Able to download final report in PDF/HTML/Word  
+
+# Methods
+
+Linear regression attempts to model the relationship between two variables by fitting a linear equation to observed data. One variable is considered to be an explanatory variable, and the other is considered to be a dependent variable.
+
+Before attempting to fit a linear model to observed data, a modeler should first determine whether or not there is a relationship between the variables of interest. In this report, standard data will be used. In the standard, the relationship between analyte's experimental result and actual result is linearly related.
+
+In the report, we will build linear regression models to relate the experimental results of analyte `HDL`, `LDL`, and `Triglycerides` to their actual results for standard data. Then, the models will be used to predict actual results for corresponding analytes.
+
+## Linear Regression Model of HDL
+
+```{r warning=FALSE}
 stddata_HDL <- dplyr::filter(standard_data(), grepl("HDL", std_id))
   
 linearMod_HDL <- lm(result ~ expected_raw, data = stddata_HDL)
 ```
 
 Summary of the linear regression model for analyte *HDL*
-```{r echo=FALSE}
+
+```{r warning=FALSE}
 summary(linearMod_HDL)
 ```
 
-
-```{r echo=FALSE}
+```{r }
 b_HDL   <- coef(linearMod_HDL)
 ```
 
+The equation of the linear regression model for analyte `HDL` is:
 
-```{r echo=FALSE}
-ggplot(data = stddata_HDL, 
+$$ y = `r b_HDL[2]`x $$
+where x = `HDL`;
+
+The scatter plot for analyte `HDL` is shown in Figure 1.
+
+```{r fig.cap = "Standard Plot of Analyte HDL", fig.pos='H'}
+p1 <- ggplot(data = stddata_HDL, 
                  aes(stddata_HDL$expected_raw, stddata_HDL$result)) + 
             geom_point() + 
             labs(title = "Standard plot of Analyte HDL",
                  x = "Expected raw data of Analyte HDL",
                  y = "Final result of Analyte HDL")
+print(p1)
 ```
 
-```{r echo=FALSE}
+From Figure 1 we see that states with higher experimental results of analyte `HDL` tend to have higher actual results. The relationship between an explanatory variable $x$ and a response variable $y$ is linearly related.
+
+## Linear Regression Model of LDL
+
+```{r }
 stddata_LDL <- dplyr::filter(standard_data(), grepl("LDL", std_id))
   
 linearMod_LDL <- lm(result ~ expected_raw, data = stddata_LDL)
 ```
 
 Summary of the linear regression model for analyte *LDL*
-```{r echo=FALSE}
+
+```{r warning=FALSE}
 summary(linearMod_LDL)
 ```
 
-```{r echo=FALSE}
+```{r }
 b_LDL   <- coef(linearMod_LDL)
 ```
 
+The equation of the linear regression model for analyte `LDL` is:
 
-```{r echo=FALSE}
+$$ y = `r b_LDL[2]`x $$
+where x = `LDL`;
+
+The scatter plot for analyte `LDL` is shown in Figure 2.
+
+```{r fig.cap= "Standard Plot of Analyte LDL"}
 ggplot(data = stddata_LDL, 
                  aes(stddata_LDL$expected_raw, stddata_LDL$result)) + 
             geom_point() + 
@@ -71,23 +143,35 @@ ggplot(data = stddata_LDL,
                  y = "Final result of Analyte LDL")
 ```
 
-```{r echo=FALSE}
+
+From Figure 2 we see that states with higher experimental results of analyte `LDL` tend to have higher actual results. The relationship between an explanatory variable $x$ and a response variable $y$ is linearly related.
+
+## Linear Regression Model of Triglycerides
+
+```{r }
 stddata_Triglycerides <- dplyr::filter(standard_data(), grepl("Triglycerides", std_id))
   
 linearMod_Triglycerides <- lm(result ~ expected_raw, data = stddata_Triglycerides)
 ```
 
 Summary of the linear regression model for analyte *Triglycerides*
-```{r echo=FALSE}
+
+```{r warning=FALSE}
 summary(linearMod_Triglycerides)
 ```
 
-```{r echo=FALSE}
+```{r }
 b_Triglycerides   <- coef(linearMod_Triglycerides)
 ```
 
+The equation of the linear regression model for analyte `Triglycerides` is:
 
-```{r echo=FALSE}
+$$ y = `r b_Triglycerides[2]`x $$
+where x = `Triglycerides`;
+
+The scatter plot for analyte `Triglycerides` is shown in Figure 3.
+
+```{r fig.pos='H', fig.cap = "Standard Plot of Analyte Triglycerides"}
 ggplot(data = stddata_Triglycerides, 
                  aes(stddata_Triglycerides$expected_raw, stddata_Triglycerides$result)) + 
             geom_point() + 
@@ -96,11 +180,13 @@ ggplot(data = stddata_Triglycerides,
                  y = "Final result of Analyte Triglycerides")
 ```
 
-**Part 2 Final Results**
+From Figure 3 we see that states with higher experimental results of analyte `Triglycerides` tend to have higher actual results. The relationship between an explanatory variable $x$ and a response variable $y$ is linearly related.
 
-The predicted results are shown in the following figures:
+# Results
 
-```{r echo=FALSE}
+The predicted results for analytes `HDL`, `LDL` and `Triglycerides` are shown in Figures 4 to 6.
+
+```{r fig.cap = "Predicted Results Plot of Analyte HDL"}
 analyst_result_HDL <- dplyr::filter(analyst_analysis_result(), grepl("HDL", analyte_name))
 
 ggplot(data = analyst_result_HDL, 
@@ -112,7 +198,8 @@ ggplot(data = analyst_result_HDL,
                  y = "Final result of Analyte HDL")
 ```
 
-```{r echo=FALSE}
+
+```{r fig.cap = "Predicted Results Plot of Analyte LDL"}
 analyst_result_LDL <- dplyr::filter(analyst_analysis_result(), grepl("LDL", analyte_name))
 
 ggplot(data = analyst_result_LDL, 
@@ -125,7 +212,7 @@ ggplot(data = analyst_result_LDL,
 ```
 
 
-```{r echo=FALSE}
+```{r fig.cap = "Predicted Results Plot of Analyte Triglycerides"}
 analyst_result_Triglycerides <- dplyr::filter(analyst_analysis_result(), grepl("Triglycerides", analyte_name))
 
 ggplot(data = analyst_result_Triglycerides, 
@@ -137,9 +224,25 @@ ggplot(data = analyst_result_Triglycerides,
                  y = "Final result of Analyte Triglycerides")
 ```
 
-The predicted results are shown in the following table:
 
-```{r echo=FALSE}
-library(knitr)
-kable(analyst_analysis_result(), caption = "Predicted results table")
+The predicted results for analytes `HDL`, `LDL` and `Triglycerides` are shown in Table 1.
+
+```{r }
+data_kable <- kable(analyst_analysis_result(), caption = "The relationship between experimental results and predicted values based on linear regression models.")
+kable_styling(data_kable, latex_options = "hold_position")
+
 ```
+
+
+# Conclusion
+
+For each of our three analytes `HDL`, `LDL` and `Triglycerides`, we found that there was a strong linearly relationship between the explanatory variable and actual value.
+
+
+\newpage
+
+# References
+
+"Shiny from RStudio" by RStudio Inc. Weblink:[https://shiny.rstudio.com/](https://shiny.rstudio.com/).
+
+"R Markdown from RStudio" by RStudio Inc. Weblink:[https://rmarkdown.rstudio.com/index.html](https://rmarkdown.rstudio.com/index.html).

@@ -15,7 +15,7 @@ library(tinytex)
 
 Logged = FALSE
 
-sqlitePath <- "db/SampleManagementSystem.db"
+sqlitePath <- "db/ManagementSystem.db"
 
 `%then%` <- shiny:::`%OR%`
 
@@ -734,12 +734,15 @@ server = function(input, output, session) {
     
     content = function(file) {
       src <- normalizePath('report_Analyst.Rmd')
-      
+      src2 <- normalizePath('MUnivlogo.jpeg') #new logo
+      #src1 <- normalizePath('my_header.tex') #new latex
       # temporarily switch to the temp dir, in case you do not have write
       # permission to the current working directory
       owd <- setwd(tempdir())
       on.exit(setwd(owd))
       file.copy(src, 'report_Analyst.Rmd', overwrite = TRUE)
+      file.copy(src2, 'MUnivlogo.jpeg')
+      #file.copy(src1, 'my_header.tex')
       
       library(rmarkdown)
       out <- render('report_Analyst.Rmd', switch(
